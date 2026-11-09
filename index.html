@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palettes Hackathon Souveraineté Numérique</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Outfit:wght@400;600&family=Unbounded:wght@600;800&family=Sora:wght@400;600&family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;600&family=Bricolage+Grotesque:wght@600;800&family=Instrument+Sans:wght@400;600&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;600&family=Gloock&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { background:#0c0c0f; color:#f4f1ea; font-family:'Manrope',sans-serif; }
+  .swatch { transition: transform .25s ease, box-shadow .25s ease; cursor:pointer; }
+  .swatch:hover { transform: translateY(-6px) scale(1.03); box-shadow:0 18px 30px -10px rgba(0,0,0,.6); }
+  .grain::after { content:""; position:absolute; inset:0; opacity:.06; pointer-events:none;
+    background-image:radial-gradient(#fff 1px, transparent 1px); background-size:4px 4px; }
+  #toast { transition: all .3s ease; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<header class="max-w-6xl mx-auto px-6 pt-14 pb-8 text-center">
+  <p class="uppercase tracking-[0.3em] text-xs text-amber-300/80 mb-3">Identité visuelle · Hackathon</p>
+  <h1 class="text-4xl md:text-6xl font-extrabold" style="font-family:'Fraunces',serif">Choisissez votre palette</h1>
+  <p class="mt-4 text-neutral-400 max-w-2xl mx-auto">6 univers de couleurs rares et leurs polices associées. Cliquez sur une pastille pour copier son code, ou sur « Copier la config Tailwind ».</p>
+</header>
+
+<main id="app" class="max-w-6xl mx-auto px-6 pb-24 grid gap-10"></main>
+
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-20 opacity-0 bg-white text-black px-5 py-3 rounded-full text-sm font-semibold shadow-2xl z-50"></div>
+
+<script>
+const palettes = [
+  {
+    id:"teranga", nom:"Teranga Émeraude", ambiance:"Fierté sénégalaise, élégante et chaleureuse",
+    hackathon:"SUNU CODE", slogan:"Notre code. Notre souveraineté. Notre avenir.",
+    titre:"Fraunces", corps:"Outfit", titreStyle:"font-weight:800",
+    couleurs:[
+      ["Nuit de l'Atlantique","#07201A","fond"],
+      ["Vert Teranga","#0E5A3C","dominante"],
+      ["Or du Sine-Saloum","#E8B04A","accent"],
+      ["Rouge hibiscus","#B3202F","accent 2"],
+      ["Sable de Dakar","#F3E6CC","texte"]
+    ]
+  },
+  {
+    id:"bissap", nom:"Bissap Royal", ambiance:"Profonde, luxueuse, très mémorable",
+    hackathon:"JOM CODE", slogan:"Coder avec honneur, innover avec dignité.",
+    titre:"DM Serif Display", corps:"Plus Jakarta Sans", titreStyle:"",
+    couleurs:[
+      ["Nuit de grenat","#1A0B14","fond"],
+      ["Bissap profond","#5A0F2E","dominante"],
+      ["Rubis de Gorée","#C8102E","accent"],
+      ["Miel d'acacia","#F4B942","accent 2"],
+      ["Crème de mil","#FFE8C2","texte"]
+    ]
+  },
+  {
+    id:"bogolan", nom:"Indigo Bogolan", ambiance:"Artisanale, noble, inspirée des tissus africains",
+    hackathon:"KORA CODE", slogan:"Chaque ligne de code est une corde. Jouons l'avenir.",
+    titre:"Gloock", corps:"Instrument Sans", titreStyle:"",
+    couleurs:[
+      ["Indigo de Kano","#141746","fond"],
+      ["Bleu cobalt wax","#3E4DB5","dominante"],
+      ["Ocre doré","#E9C46A","accent"],
+      ["Terre de bogolan","#8C5A3C","accent 2"],
+      ["Coton écru","#F1E9D2","texte"]
+    ]
+  },
+  {
+    id:"lacrose", nom:"Lac Rose Aurore", ambiance:"Rare, audacieuse, vraiment unique en Afrique",
+    hackathon:"KAWRAL", slogan:"Levons l'Afrique par le code.",
+    titre:"Bricolage Grotesque", corps:"Sora", titreStyle:"font-weight:800",
+    couleurs:[
+      ["Nuit prune","#2D0A31","fond"],
+      ["Rose du Lac Retba","#E0568C","dominante"],
+      ["Magenta sel","#B8336A","accent"],
+      ["Turquoise lagon","#7DE2D1","accent 2"],
+      ["Pêche de l'aube","#FFD7BA","texte"]
+    ]
+  },
+  {
+    id:"sahel", nom:"Latérite du Sahel", ambiance:"Terre, soleil et énergie, très africaine",
+    hackathon:"SAHEL SPARK", slogan:"L'étincelle venue d'Afrique.",
+    titre:"Syne", corps:"Space Grotesk", titreStyle:"font-weight:800",
+    couleurs:[
+      ["Pétrole du désert","#12303A","fond"],
+      ["Latérite brûlée","#C1440E","dominante"],
+      ["Ambre du couchant","#F2A65A","accent"],
+      ["Sable doré","#E9C46A","accent 2"],
+      ["Lait de karité","#FFF1D6","texte"]
+    ]
+  },
+  {
+    id:"cyber", nom:"Cyber Kora", ambiance:"Futuriste et tech, pour séduire les jeunes développeurs",
+    hackathon:"UBUNTU HACK", slogan:"Je code parce que nous sommes.",
+    titre:"Unbounded", corps:"Manrope", titreStyle:"font-weight:800",
+    couleurs:[
+      ["Minuit numérique","#0A0F2C","fond"],
+      ["Menthe électrique","#00F5D4","dominante"],
+      ["Violet améthyste","#9B5DE5","accent"],
+      ["Rose néon","#F15BB5","accent 2"],
+      ["Soleil digital","#FEE440","texte"]
+    ]
+  }
+];
+
+function lum(hex){
+  const n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;
+  return (0.299*r+0.587*g+0.114*b)/255;
+}
+function txt(hex){ return lum(hex)>0.6 ? "#111" : "#fff"; }
+function toast(m){
+  const t=document.getElementById("toast"); t.textContent=m;
+  t.style.opacity=1; t.style.transform="translate(-50%,0)";
+  setTimeout(()=>{t.style.opacity=0;t.style.transform="translate(-50%,5rem)"},1600);
+}
+function copy(s,m){ navigator.clipboard.writeText(s).then(()=>toast(m||("Copié : "+s))); }
+
+const app=document.getElementById("app");
+palettes.forEach((p,i)=>{
+  const [fond,dom,acc,acc2,clair]=p.couleurs.map(c=>c[1]);
+  const twConfig=`// tailwind.config.js\ncolors: {\n  fond: '${fond}',\n  dominante: '${dom}',\n  accent: '${acc}',\n  accent2: '${acc2}',\n  clair: '${clair}',\n},\nfontFamily: {\n  titre: ['${p.titre}', 'serif'],\n  corps: ['${p.corps}', 'sans-serif'],\n}`;
+  const sw=p.couleurs.map(([n,h,r])=>`
+    <div class="swatch rounded-2xl overflow-hidden border border-white/10" onclick="copy('${h}')">
+      <div class="h-28 flex items-end p-3" style="background:${h};color:${txt(h)}">
+        <span class="text-xs font-semibold uppercase tracking-wider opacity-80">${r}</span>
+      </div>
+      <div class="bg-black/40 px-3 py-2">
+        <div class="text-sm font-semibold">${n}</div>
+        <div class="text-xs text-neutral-400 font-mono">${h.toUpperCase()}</div>
+      </div>
+    </div>`).join("");
+
+  app.insertAdjacentHTML("beforeend",`
+  <section class="rounded-3xl overflow-hidden border border-white/10 bg-neutral-900/60">
+    <div class="relative grain p-8 md:p-12" style="background:linear-gradient(135deg,${fond} 0%,${dom} 130%);color:${clair}">
+      <p class="text-xs uppercase tracking-[0.3em] opacity-70">Palette ${i+1} · ${p.nom}</p>
+      <h2 class="mt-3 text-4xl md:text-6xl leading-tight" style="font-family:'${p.titre}';${p.titreStyle};color:${acc}">${p.hackathon}</h2>
+      <p class="mt-3 text-lg md:text-xl max-w-xl" style="font-family:'${p.corps}'">« ${p.slogan} »</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <span class="px-5 py-2.5 rounded-full font-semibold text-sm" style="background:${acc};color:${txt(acc)};font-family:'${p.corps}'">S'inscrire</span>
+        <span class="px-5 py-2.5 rounded-full font-semibold text-sm border" style="border-color:${acc2};color:${acc2};font-family:'${p.corps}'">Découvrir le programme</span>
+      </div>
+    </div>
+    <div class="p-6 md:p-8">
+      <p class="text-neutral-400 mb-5 text-sm">${p.ambiance}</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">${sw}</div>
+      <div class="mt-8 grid md:grid-cols-2 gap-5">
+        <div class="rounded-2xl p-5 border border-white/10" style="background:${fond};color:${clair}">
+          <p class="text-[11px] uppercase tracking-widest opacity-60 mb-2">Police des titres</p>
+          <p class="text-3xl" style="font-family:'${p.titre}';${p.titreStyle}">${p.titre}</p>
+          <p class="mt-1 text-sm opacity-70" style="font-family:'${p.titre}'">Souveraineté numérique 0123456789</p>
+        </div>
+        <div class="rounded-2xl p-5 border border-white/10" style="background:${clair};color:${fond}">
+          <p class="text-[11px] uppercase tracking-widest opacity-60 mb-2">Police du texte</p>
+          <p class="text-3xl" style="font-family:'${p.corps}';font-weight:600">${p.corps}</p>
+          <p class="mt-1 text-sm opacity-80" style="font-family:'${p.corps}'">L'Afrique ne consomme plus la tech, elle la construit.</p>
+        </div>
+      </div>
+      <button onclick='copy(${JSON.stringify(twConfig)},"Config Tailwind copiée")' class="mt-6 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-amber-200 transition">Copier la config Tailwind</button>
+    </div>
+  </section>`);
+});
+</script>
+</body>
+</html>
